@@ -4,3 +4,6 @@ Unity 2018.3 project source for completed [Outline Shader Tutorial](https://roys
 ![alt text](https://i.imgur.com/wWU7Q6d.png)
 
 Uses the depth and normals buffers to generate outlines of variable thickness and color.
+
+## Model Credit
+ - https://free3d.com/3d-model/polygon-terrain-mini-map-90578.html
