@@ -33,6 +33,9 @@
 
 			float _NormalThreshold;
 
+			bool _Rainbow;
+			float _RainbowScale;
+
 			// This matrix is populated in PostProcessOutline.cs.
 			float4x4 _ClipToView;
 
@@ -45,6 +48,21 @@
 				float alpha = top.a + bottom.a * (1 - top.a);
 
 				return float4(color, alpha);
+			}
+
+			float3 HUEtoRGB(in float H)
+			{
+				float R = abs(H * 6 - 3) - 1;
+				float G = 2 - abs(H * 6 - 2);
+				float B = 2 - abs(H * 6 - 4);
+				return saturate(float3(R, G, B));
+			}
+
+			float3 HSLtoRGB(in float3 HSL)
+			{
+				float3 RGB = HUEtoRGB(HSL.x);
+				float C = (1 - abs(2 * HSL.z - 1)) * HSL.y;
+				return (RGB - 0.5) * C + HSL.z;
 			}
 
 			// Both the Varyings struct and the Vert shader are copied
@@ -134,7 +152,17 @@
 
 				float edge = max(edgeDepth, edgeNormal);
 
-				float4 edgeColor = float4(_Color.rgb, _Color.a * edge);
+				float3 rgb;
+				if (_Rainbow) {
+					float hue = fmod(abs(i.viewSpaceDir.y) * _RainbowScale, 1);
+					float3 hsl = float3(hue, 1, 0.5);
+					rgb = HSLtoRGB(hsl);
+				}
+				else {
+					rgb = _Color.rgb;
+				}
+
+				float4 edgeColor = float4(rgb, _Color.a * edge);
 
 				float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.texcoord);
 

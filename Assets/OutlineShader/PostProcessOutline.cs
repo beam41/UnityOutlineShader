@@ -18,7 +18,9 @@ public sealed class PostProcessOutline : PostProcessEffectSettings
     [Tooltip("Scale the strength of how much the depthNormalThreshold affects the depth threshold.")]
     public FloatParameter depthNormalThresholdScale = new FloatParameter { value = 7 };
     [Range(0, 1), Tooltip("Larger values will require the difference between normals to be greater to draw an edge.")]
-    public FloatParameter normalThreshold = new FloatParameter { value = 0.4f };    
+    public FloatParameter normalThreshold = new FloatParameter { value = 0.4f };
+    public BoolParameter rainbow = new BoolParameter { value = true };
+    public FloatParameter rainbowScale = new FloatParameter { value = 5f };
 }
 
 public sealed class PostProcessOutlineRenderer : PostProcessEffectRenderer<PostProcessOutline>
@@ -33,6 +35,8 @@ public sealed class PostProcessOutlineRenderer : PostProcessEffectRenderer<PostP
         sheet.properties.SetFloat("_DepthNormalThresholdScale", settings.depthNormalThresholdScale);
         sheet.properties.SetFloat("_NormalThreshold", settings.normalThreshold);
         sheet.properties.SetColor("_Color", settings.color);
+        sheet.properties.SetFloat("_RainbowScale", settings.rainbowScale);
+        sheet.properties.SetInt("_Rainbow", settings.rainbow ? 1 : 0);
 
         Matrix4x4 clipToView = GL.GetGPUProjectionMatrix(context.camera.projectionMatrix, true).inverse;
         sheet.properties.SetMatrix("_ClipToView", clipToView);
