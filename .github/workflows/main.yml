@@ -1,0 +1,38 @@
+name: Build Unity game
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+env:
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+
+jobs:
+  buildForSomePlatforms:
+    name: Build for ${{ matrix.targetPlatform }} on version ${{ matrix.unityVersion }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        unityVersion:
+          - 2019.3.5f1
+        targetPlatform:
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+          - StandaloneWindows # Build a Windows standalone.
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+    steps:
+      - uses: actions/checkout@v2
+      - uses: webbertakken/unity-builder@latest
+        with:
+          unityVersion: ${{ matrix.unityVersion }}
+          targetPlatform: ${{ matrix.targetPlatform }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Build
+          path: build
