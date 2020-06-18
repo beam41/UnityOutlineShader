@@ -28,7 +28,7 @@ jobs:
           - StandaloneLinux64 # Build a Linux 64-bit standalone.
     steps:
       - uses: actions/checkout@v2
-      - uses: webbertakken/unity-builder@latest
+      - uses: webbertakken/unity-builder@1.0
         with:
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
